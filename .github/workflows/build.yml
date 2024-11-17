@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+    #   - name: Set up Python
+    #     uses: actions/setup-python@v2
+    #     with:
+    #       python-version: '3.x'
+    #   - name: Install dependencies
+    #     run: pip install -r requirements.txt
+      
+    #   - name: Lint
+    #     run: |
+    #       pip install -q pycodestyle
+    #       echo "Linting Python code with PEP8..."
+    #       pycodestyle .
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.DOCKER_REGISTRY_PASS }}" | docker login registry.gitlab.com  -u "${{ secrets.DOCKER_REGISTRY_USER }}" --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t registry.gitlab.com/eisakhanov1/devops_hw2 .
+
+      - name: Push Docker image
+        run: docker push registry.gitlab.com/eisakhanov1/devops_hw2
