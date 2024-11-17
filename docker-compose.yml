@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  backend:
+    image: registry.gitlab.com/eisakhanov1/devops_hw2
+    ports:
+      - "8080:8080"
